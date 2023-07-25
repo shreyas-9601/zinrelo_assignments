@@ -19,7 +19,10 @@ class User:
         today = date.today()
         age = today.year-Birthday_obj.year
         if (today.month < Birthday_obj.month or (today.month == Birthday_obj.month and today.day < Birthday_obj.day)):
+            #condition checks if the person's birthday month and day is after today's month and day or not
             age -= 1
+            #if the condition is true subtract 1 from age
+            
         return age >= 21
 
 
@@ -39,6 +42,7 @@ class User:
     def first_monday_born(self):
         Birthday_obj = datetime.strptime(self.Birthday, '%m/%d/%Y')
         return Birthday_obj.weekday() != 0 or Birthday_obj.day > 7
+        #weekday() gives the day index like monday-0, tuesday-1 and so on
 
             
 class Order:
