@@ -3,52 +3,56 @@ import csv
 import re  
         
 class User:
-    def __init__(self,Name,Birthday,Email,State,ZipCode):
-            self.Name=Name
-            self.Birthday=Birthday
-            self.Email=Email
-            self.State=State
-            self.ZipCode=ZipCode
+    def __init__(self,name,birthday,email,state,zipcode):
+            self.name=name
+            self.birthday=birthday
+            self.email=email
+            self.state=state
+            self.zipcode=zipcode
     
     def is_valid_state(self):
-        return self.State not in ['NJ', 'CT', 'PA', 'MA', 'IL', 'ID', 'OR']
+        return self.state not in ['NJ', 'CT', 'PA', 'MA', 'IL', 'ID', 'OR']
 
 
     def is_valid_age(self):
-        Birthday_obj = datetime.strptime(self.Birthday, '%m/%d/%Y')
+        birthday_obj = datetime.strptime(self.birthday, '%m/%d/%Y')
         today = date.today()
-        age = today.year-Birthday_obj.year
-        if (today.month < Birthday_obj.month or (today.month == Birthday_obj.month and today.day < Birthday_obj.day)):
+        age = today.year-birthday_obj.year
+        if (today.month < birthday_obj.month or (today.month == birthday_obj.month and today.day < birthday_obj.day)):
             #condition checks if the person's birthday month and day is after today's month and day or not
+            #e.g. birthday - 10/27/2010 and today - 7/25/2023
+            #age=2023-2010=13
+            #today's month (7) < birthday month (10) is True
             age -= 1
             #if the condition is true subtract 1 from age
+            #age =13-1 (12)
             
         return age >= 21
 
 
     def is_valid_mail(self):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-        if (re.fullmatch(regex, self.Email)):
+        if (re.fullmatch(regex, self.email)):
             return True
 
 
     def is_valid_zipcode(self):
-        for i in range(len(self.ZipCode)-1):
-            if (abs(int(self.ZipCode[i])-int(self.ZipCode[i+1])) == 1):
+        for i in range(len(self.zipcode)-1):
+            if (abs(int(self.zipcode[i])-int(self.zipcode[i+1])) == 1):
                 return False
         return True
 
 
     def first_monday_born(self):
-        Birthday_obj = datetime.strptime(self.Birthday, '%m/%d/%Y')
-        return Birthday_obj.weekday() != 0 or Birthday_obj.day > 7
+        birthday_obj = datetime.strptime(self.birthday, '%m/%d/%Y')
+        return birthday_obj.weekday() != 0 or birthday_obj.day > 7
         #weekday() gives the day index like monday-0, tuesday-1 and so on
 
             
 class Order:
-    def __init__(self,Order_ID,Name,Birthday,Email,State,ZipCode):
-        self.Order_ID=Order_ID
-        self.user=User(Name,Birthday,Email,State,ZipCode)
+    def __init__(self,order_id,name,birthday,email,state,zipcode):
+        self.order_id=order_id
+        self.user=User(name,birthday,email,state,zipcode)
         
     def validate_orders(self):
         return self.user.is_valid_state() and self.user.is_valid_zipcode() and self.user.is_valid_age() and self.user.is_valid_age() and self.user.is_valid_mail() and self.user.first_monday_born()           
@@ -67,22 +71,22 @@ class Acme:
             csvreader = csv.reader(file)
             headers = next(csvreader)
 
-            ID_index = headers.index('ID')
-            Name_index = headers.index('Name')
-            Birthday_index = headers.index('Birthday')
-            Email_index = headers.index('Email')
-            State_index = headers.index('State')
-            ZipCode_index = headers.index('ZipCode')
+            id_index = headers.index('ID')
+            name_index = headers.index('Name')
+            birthday_index = headers.index('Birthday')
+            email_index = headers.index('Email')
+            state_index = headers.index('State')
+            zipcode_index = headers.index('ZipCode')
 
             for row in csvreader:
-                Order_ID = row[ID_index]
-                Name = row[Name_index]
-                Birthday = row[Birthday_index]
-                Email = row[Email_index]
-                State = row[State_index]
-                ZipCode = row[ZipCode_index]
+                order_id = row[id_index]
+                name = row[name_index]
+                birthday = row[birthday_index]
+                email = row[email_index]
+                state = row[state_index]
+                zipcode = row[zipcode_index]
                 
-                order=Order(Order_ID, Name, Birthday, Email, State, ZipCode)
+                order=Order(order_id, name, birthday, email, state, zipcode)
 
                 if (order.validate_orders()):
                     self.valid_orders.append(order)
@@ -93,11 +97,11 @@ class Acme:
     def write(self):
         with open('valid.csv', 'w', newline='') as valid_file: 
             writer = csv.writer(valid_file) 
-            writer.writerows([[order.Order_ID]] for order in self.valid_orders)
+            writer.writerows([[order.order_id]] for order in self.valid_orders)
             
         with open('invalid.csv', 'w', newline='') as invalid_file: 
             writer = csv.writer(invalid_file) 
-            writer.writerows([[order.Order_ID]] for order in self.invalid_orders)
+            writer.writerows([[order.order_id]] for order in self.invalid_orders)
             
             
 if __name__ == '__main__':
