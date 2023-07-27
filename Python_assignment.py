@@ -34,8 +34,6 @@ class User:
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         if (re.fullmatch(regex, self.email)):
             return True
-        else:
-            return False
 
 
     def is_valid_zipcode(self):
@@ -49,7 +47,8 @@ class User:
         birthday_obj = datetime.strptime(self.birthday, '%m/%d/%Y')
         return birthday_obj.weekday() != 0 or birthday_obj.day > 7
         #weekday() gives the day index like monday-0, tuesday-1 and so on
-      
+
+            
 class Order:
     def __init__(self,order_id,name,birthday,email,state,zipcode):
         self.order_id=order_id
