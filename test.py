@@ -1,7 +1,5 @@
 import unittest 
 from Python_assignment import User
-from datetime import datetime, date
-
 
 class TestUser(unittest.TestCase):
     def setUp(self):
